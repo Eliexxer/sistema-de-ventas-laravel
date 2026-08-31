@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use Auth;
 use Illuminate\Http\Request;
 
 class CategoriasController extends Controller
@@ -11,7 +13,9 @@ class CategoriasController extends Controller
      */
     public function index()
     {
-        return view('modules.categorias.index');
+        $titulo = "Administrar tus Categorias";
+        $items = Categoria::all();
+        return view('modules.categorias.index', compact('titulo', 'items'));
     }
 
     /**
@@ -19,7 +23,9 @@ class CategoriasController extends Controller
      */
     public function create()
     {
-        //
+        
+        $titulo = 'Nueva Categoría';
+        return view('modules.categorias.create', compact('titulo'));
     }
 
     /**
@@ -27,7 +33,11 @@ class CategoriasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $item = new Categoria();
+        $item->nombre = $request->nombre;
+        $item->user_id = Auth::user()->id;
+        $item->save();
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -35,7 +45,9 @@ class CategoriasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $titulo = 'Eliminar Categoría';
+        $item = Categoria::findOrFail($id);
+        return view('modules.categorias.show', compact('titulo', 'item'));
     }
 
     /**
@@ -43,7 +55,9 @@ class CategoriasController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $titulo = 'Editar Categoría';
+        $item = Categoria::findOrFail($id);
+        return view('modules.categorias.edit', compact('titulo', 'item'));
     }
 
     /**
@@ -51,7 +65,10 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = Categoria::findOrFail($id);
+        $item->nombre = $request->nombre;
+        $item->save();
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -59,6 +76,8 @@ class CategoriasController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $item = Categoria::findOrFail($id);
+        $item->delete();
+        return redirect()->route('categorias.index');
     }
 }

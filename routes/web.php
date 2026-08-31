@@ -27,6 +27,12 @@ Route::prefix('ventas')->middleware('auth')->group(function () {
 
 Route::prefix('categorias')->middleware('auth')->group(function () {
     Route::get('/', [CategoriasController::class, 'index'])->name('categorias.index');
+    Route::get('/create', [CategoriasController::class, 'create'])->name('categorias.create');
+    Route::post('/store', [CategoriasController::class, 'store'])->name('categorias.store');
+    Route::get('/show/{id}', [CategoriasController::class, 'show'])->name('categorias.show');
+    Route::get('/edit/{id}', [CategoriasController::class, 'edit'])->name('categorias.edit');
+    Route::put('/update/{id}', [CategoriasController::class, 'update'])->name('categorias.update');
+    Route::delete('/destroy/{id}', [CategoriasController::class, 'destroy'])->name('categorias.destroy');
 });
 
 Route::prefix('productos')->middleware('auth')->group(function () {

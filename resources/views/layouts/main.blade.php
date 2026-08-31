@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <title>@yield('titulo')</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -28,6 +28,9 @@
   <link href="{{ asset('NiceAdmin/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
   <link href="{{ asset('NiceAdmin/assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <!-- Template Main CSS File -->
   <link href="{{ asset('NiceAdmin/assets/css/style.css') }}" rel="stylesheet">
 
@@ -48,11 +51,12 @@
   @include('shared.aside')
   <!-- End Sidebar-->
 
+  @yield('content')
 
   <!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  @include('shared.footer');
+  @include('shared.footer')
   <!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
@@ -66,10 +70,10 @@
   <script src="{{ asset('NiceAdmin/assets/vendor/quill/quill.js') }}"></script>
   <script src="{{ asset('NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
   <script src="{{ asset('NiceAdmin/assets/vendor/tinymce/tinymce.min.js') }}"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="{{ asset('NiceAdmin/assets/vendor/php-email-form/validate.js') }}"></script>
 
   <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="{{ asset('NiceAdmin/assets/js/main.js') }}"></script>
 
 </body>
 
