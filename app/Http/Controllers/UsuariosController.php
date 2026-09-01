@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 
 class UsuariosController extends Controller
@@ -11,7 +13,9 @@ class UsuariosController extends Controller
      */
     public function index()
     {
-        return view("modules.usuarios.index");
+        $titulo = "Administrador de Usuarios";
+        $items = User::all();
+        return view("modules.usuarios.index", compact("titulo", "items"));
     }
 
     /**
@@ -19,7 +23,8 @@ class UsuariosController extends Controller
      */
     public function create()
     {
-        //
+        $titulo = 'Nuevo Usuario';
+        return view('modules.usuarios.create', compact('titulo'));
     }
 
     /**
@@ -27,7 +32,14 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $item = new User();
+        $item->name = $request->name;
+        $item->email = $request->email;
+        $item->password = Hash::make($request->password);
+        $item->roles = $request->roles;
+        $item->save();
+
+        return redirect()->route('usuarios.index');
     }
 
     /**

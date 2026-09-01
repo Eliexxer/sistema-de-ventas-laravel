@@ -21,7 +21,8 @@
                                 @method('PUT')
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre de la Categoría</label>
-                                    <input type="text" class="form-control" required id="nombre" name="nombre" value="{{ $item->nombre }}">
+                                    <input type="text" class="form-control" required id="nombre" name="nombre"
+                                        value="{{ $item->nombre }}">
                                 </div>
                                 <button type="submit" class="btn btn-warning mt-3">Actualizar</button>
                                 <a href="{{ route('categorias.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
