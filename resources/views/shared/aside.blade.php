@@ -42,9 +42,9 @@
         </li><!-- End Login Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('clientes.index') }}">
+            <a class="nav-link collapsed" href="{{ route('proveedores.index') }}">
                 <i class="bi bi-dash-circle"></i>
-                <span>Clientes</span>
+                <span>Proveedores</span>
             </a>
         </li><!-- End Error 404 Page Nav -->
 

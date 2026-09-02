@@ -6,7 +6,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Listado de Categorias</h1>
+            <h1>Listado de Proveedores</h1>
         </div><!-- End Page Title -->
 
         <section class="section">
@@ -15,34 +15,44 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Administrar Categorías</h5>
-                            <p>Administrar las Categorias de los Productos</p>
-                            <a href="{{ route('categorias.create') }}" class="btn btn-primary">
-                                <i class="fa-solid fa-circle-plus"></i> Nueva Categoría</a>
+                            <h5 class="card-title">Administrar Proveedores</h5>
+                            <p>Administrar los Proveedores</p>
+                            <a href="{{ route('proveedores.create') }}" class="btn btn-primary">
+                                <i class="fa-solid fa-circle-plus"></i> Nuevo Proveedor
+                            </a>
                             <hr>
                             <!-- Table with stripped rows -->
                             <table class="table datatable">
                                 <thead>
                                     <tr>
-                                        <th>Nombre Categorías</th>
-                                        <th>Acciones </th>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>CP</th>
+                                        <th>Sitio Web</th>
+                                        <th>Notas</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($items as $item)
                                         <tr>
                                             <td>{{ $item->nombre }}</td>
+                                            <td>{{ $item->telefono }}</td>
+                                            <td>{{ $item->email }}</td>
+                                            <td>{{ $item->cp }}</td>
+                                            <td>{{ $item->sitio_web }}</td>
+                                            <td>{{ $item->notas }}</td>
                                             <td>
-                                                <a class="btn btn-warning" href="{{ route('categorias.edit', $item->id) }}">
+                                                <a class="btn btn-warning" href="{{ route('proveedores.edit', $item->id) }}">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </a>
-                                                <a class="btn btn-danger" href="{{ route('categorias.show', $item->id) }}">
+                                                <a class="btn btn-danger" href="{{ route('proveedores.show', $item->id) }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </a>
                                             </td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                             <!-- End Table with stripped rows -->

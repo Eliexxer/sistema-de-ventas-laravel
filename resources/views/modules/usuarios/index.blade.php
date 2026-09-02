@@ -29,7 +29,6 @@
                                         <th>Email</th>
                                         <th>Estado</th>
                                         <th>Rol</th>
-                                        <th>Cambio Contraseña</th>
                                         <th>Acciones </th>
                                     </tr>
                                 </thead>
@@ -52,12 +51,31 @@
 
 @push('scripts')
     <script>
+        // Alertas de sesión (crear / editar usuario)
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+
         function recargar_tbody() {
             $.ajax({
                 type: "GET",
                 url: "{{ route('usuarios.tbody') }}",
                 success: function (response) {
-                    console.log(response);
+                    $('table tbody').html(response);
                 }
             });
         }
@@ -69,10 +87,34 @@
                 type: "GET",
                 url: url,
                 success: function (response) {
-                    if (response == 1) {
-                        alert("Estado actualizado correctamente");
+                    if (response == 1 || (response && response.success)) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Actualizado!',
+                            text: (response && response.message) ? response.message : 'Estado actualizado correctamente',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        recargar_tbody();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: (response && response.message) ? response.message : 'No se pudo actualizar el estado',
+                            confirmButtonText: 'Aceptar'
+                        });
                         recargar_tbody();
                     }
+                },
+                error: function (xhr) {
+                    let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Error de comunicación con el servidor';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: msg,
+                        confirmButtonText: 'Aceptar'
+                    });
+                    recargar_tbody();
                 }
             });
         }
@@ -84,7 +126,12 @@
 
             // 1. Validar que las contraseñas coincidan
             if (password !== confirmacion) {
-                alert("Las contraseñas no coinciden. Por favor, verifícalas.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Atención',
+                    text: 'Las contraseñas no coinciden. Por favor, verifícalas.',
+                    confirmButtonText: 'Aceptar'
+                });
                 return false;
             }
 
@@ -101,9 +148,14 @@
                     password: password
                 },
                 success: function (response) {
-                    if (response.success) {
-                        // 2. Alerta de éxito
-                        alert(response.message);
+                    if (response == 1 || (response && response.success)) {
+                        // 2. Alerta de éxito con SweetAlert2
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: (response && response.message) ? response.message : 'Contraseña actualizada correctamente',
+                            confirmButtonText: 'Aceptar'
+                        });
 
                         // 3. Limpieza del formulario
                         $('#frmPassword')[0].reset();
@@ -115,18 +167,28 @@
                             modalInstance.hide();
                         }
                     } else {
-                        alert("Ocurrió un error al cambiar la contraseña.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: (response && response.message) ? response.message : 'Ocurrió un error al cambiar la contraseña.',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
                 },
                 error: function (xhr) {
                     console.error(xhr);
-                    alert("Error al procesar la solicitud.");
+                    let msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Error al procesar la solicitud en el servidor.';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: msg,
+                        confirmButtonText: 'Aceptar'
+                    });
                 }
             });
 
             return false;
         }
-
 
         $(document).on('change', '.check-estado', function () {
             let id = $(this).val();
@@ -145,5 +207,4 @@
             $('#frmPassword')[0].reset();
         });
     </script>
-
 @endpush

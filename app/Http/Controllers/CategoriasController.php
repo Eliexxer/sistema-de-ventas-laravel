@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Auth;
+use Exception;
 use Illuminate\Http\Request;
 
 class CategoriasController extends Controller
@@ -33,11 +34,15 @@ class CategoriasController extends Controller
      */
     public function store(Request $request)
     {
-        $item = new Categoria();
-        $item->nombre = $request->nombre;
-        $item->user_id = Auth::user()->id;
-        $item->save();
-        return redirect()->route('categorias.index');
+        try {
+            $item = new Categoria();
+            $item->nombre = $request->nombre;
+            $item->user_id = Auth::user()->id;
+            $item->save();
+            return to_route('categorias.index')->with('success', 'Categoria creada correctamente');
+        } catch (Exception $e) {
+            return to_route('categorias.index')->with('error', 'Error al crear la categoria');
+        }
     }
 
     /**
@@ -65,10 +70,14 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $item = Categoria::findOrFail($id);
-        $item->nombre = $request->nombre;
-        $item->save();
-        return redirect()->route('categorias.index');
+        try {
+            $item = Categoria::findOrFail($id);
+            $item->nombre = $request->nombre;
+            $item->save();
+            return to_route('categorias.index')->with('success', 'Categoria actualizada correctamente');
+        } catch (Exception $e) {
+            return to_route('categorias.index')->with('error', 'Error al actualizar la categoria');
+        }
     }
 
     /**

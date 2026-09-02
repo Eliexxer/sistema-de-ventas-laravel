@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Hash;
 use Illuminate\Http\Request;
 
@@ -32,14 +33,19 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        $item = new User();
-        $item->name = $request->name;
-        $item->email = $request->email;
-        $item->password = Hash::make($request->password);
-        $item->roles = $request->roles;
-        $item->save();
-
-        return redirect()->route('usuarios.index');
+        try {
+            //code...
+            $item = new User();
+            $item->name = $request->name;
+            $item->email = $request->email;
+            $item->password = Hash::make($request->password);
+            $item->roles = $request->roles;
+            $item->save();
+    
+            return to_route('usuarios.index')->with('success', 'Usuario creado correctamente');
+        } catch (Exception $e) {
+            return to_route('usuarios.index')->with('error', 'Error al crear el usuario');
+        }
     }
 
     /**
@@ -65,12 +71,16 @@ class UsuariosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $item = User::findOrFail($id);
-        $item->name = $request->name;
-        $item->email = $request->email;
-        $item->roles = $request->roles;
-        $item->save();
-        return redirect()->route('usuarios.index');
+        try {
+            $item = User::findOrFail($id);
+            $item->name = $request->name;
+            $item->email = $request->email;
+            $item->roles = $request->roles;
+            $item->save();
+            return to_route('usuarios.index')->with('success','Usuario actualizado correctamente');
+        } catch (Exception $e) {
+            return to_route('usuarios.index')->with('error','Error al actualizar el usuario');
+        }
     }
 
     /**
@@ -89,19 +99,37 @@ class UsuariosController extends Controller
 
     public function estado($id, $estado)
     {
-        $item = User::findOrFail($id);
-        $item->is_active = $estado;
-        return$item->save();
-        
+        try {
+            $item = User::findOrFail($id);
+            $item->is_active = $estado;
+            $item->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado actualizado correctamente'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el estado'
+            ], 500);
+        }
     }
 
-    public function cambiarPassword(Request $request) {
-        $item = User::findOrFail($request->id);
-        $item->password = Hash::make($request->password);
-        $item->save();
-        return response()->json([
-            'success' => true,
-            'message' => 'Contraseña cambiada correctamente'
-        ]);
+    public function cambiarPassword(Request $request)
+    {
+        try {
+            $item = User::findOrFail($request->id);
+            $item->password = Hash::make($request->password);
+            $item->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Contraseña cambiada correctamente'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cambiar la contraseña'
+            ], 500);
+        }
     }
 }
