@@ -51,4 +51,7 @@ Route::prefix('usuarios')->middleware('auth')->group(function () {
     Route::get('/edit/{id}', [UsuariosController::class, 'edit'])->name('usuarios.edit');
     Route::put('/update/{id}', [UsuariosController::class, 'update'])->name('usuarios.update');
     Route::delete('/destroy/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy');
+    Route::get('/tbody', [UsuariosController::class, 'tbody'])->name('usuarios.tbody');
+    Route::get('cambiar-estado/{id}/{estado}', [UsuariosController::class, 'estado'])->name('usuarios.estado');
+    Route::post('/cambio-password', [UsuariosController::class, 'cambiarPassword'])->name('usuarios.cambioPassword');
 });

@@ -55,7 +55,9 @@ class UsuariosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $titulo = 'Editar Usuario';
+        $item = User::find($id);
+        return view('modules.usuarios.edit', compact('titulo', 'item'));
     }
 
     /**
@@ -63,7 +65,12 @@ class UsuariosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = User::findOrFail($id);
+        $item->name = $request->name;
+        $item->email = $request->email;
+        $item->roles = $request->roles;
+        $item->save();
+        return redirect()->route('usuarios.index');
     }
 
     /**
@@ -72,5 +79,29 @@ class UsuariosController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function tbody(Request $request)
+    {
+        $items = User::all();
+        return view('modules.usuarios.tbody', compact('items'));
+    }
+
+    public function estado($id, $estado)
+    {
+        $item = User::findOrFail($id);
+        $item->is_active = $estado;
+        return$item->save();
+        
+    }
+
+    public function cambiarPassword(Request $request) {
+        $item = User::findOrFail($request->id);
+        $item->password = Hash::make($request->password);
+        $item->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña cambiada correctamente'
+        ]);
     }
 }
