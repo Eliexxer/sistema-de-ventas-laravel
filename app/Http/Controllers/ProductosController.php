@@ -17,8 +17,8 @@ class ProductosController extends Controller
     public function index(Request $request)
     {
         $titulo = "Listado de Productos";
-        $buscar = $request->get('buscar');
-        $cantidad = (int) $request->get('cantidad', 10);
+        $buscar = $request->input('buscar');
+        $cantidad = (int) $request->input('cantidad', 10);
         $cantidad = max(1, min(20, $cantidad ?: 10));
 
         $items = Producto::with(['category', 'proveedor'])
