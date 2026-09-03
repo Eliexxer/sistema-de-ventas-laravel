@@ -12,10 +12,19 @@ class CategoriasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $titulo = "Administrar tus Categorias";
-        $items = Categoria::all();
+        $buscar = $request->get('buscar');
+        $cantidad = (int) $request->get('cantidad', 10);
+        $cantidad = max(1, min(20, $cantidad ?: 10));
+
+        $items = Categoria::when($buscar, function ($query, $buscar) {
+                $query->where('nombre', 'like', "%{$buscar}%");
+            })
+            ->paginate($cantidad)
+            ->withQueryString();
+
         return view('modules.categorias.index', compact('titulo', 'items'));
     }
 

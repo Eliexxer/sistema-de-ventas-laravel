@@ -20,32 +20,58 @@
                             <a href="{{ route('categorias.create') }}" class="btn btn-primary">
                                 <i class="fa-solid fa-circle-plus"></i> Nueva Categoría</a>
                             <hr>
-                            <!-- Table with stripped rows -->
-                            <table class="table datatable">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre Categorías</th>
-                                        <th>Acciones </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($items as $item)
-                                        <tr>
-                                            <td>{{ $item->nombre }}</td>
-                                            <td>
-                                                <a class="btn btn-warning" href="{{ route('categorias.edit', $item->id) }}">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </a>
-                                                <a class="btn btn-danger" href="{{ route('categorias.show', $item->id) }}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
 
-                                </tbody>
-                            </table>
+                            @include('shared.table-filter', [
+                                'action' => route('categorias.index'),
+                                'placeholder' => 'Buscar por categoría...'
+                            ])
+
+                            <!-- Table with stripped rows -->
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre Categorías</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($items as $item)
+                                            <tr>
+                                                <td>{{ $item->nombre }}</td>
+                                                <td class="text-center">
+                                                    <a class="btn btn-warning btn-sm" href="{{ route('categorias.edit', $item->id) }}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    <a class="btn btn-danger btn-sm" href="{{ route('categorias.show', $item->id) }}">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="2" class="text-center py-4 text-muted">
+                                                    <i class="fa-solid fa-folder-open fs-3 d-block mb-2"></i>
+                                                    No se encontraron categorías
+                                                    @if(request('buscar'))
+                                                        para "<strong>{{ request('buscar') }}</strong>"
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                             <!-- End Table with stripped rows -->
+
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+                                <small class="text-muted">
+                                    Mostrando {{ $items->firstItem() ?? 0 }} a {{ $items->lastItem() ?? 0 }} de {{ $items->total() }} registros
+                                </small>
+                                <div>
+                                    {{ $items->links() }}
+                                </div>
+                            </div>
 
                         </div>
                     </div>

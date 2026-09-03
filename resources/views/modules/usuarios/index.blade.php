@@ -21,22 +21,39 @@
                                 <i class="fa-solid fa-user-plus"></i> Nuevo Usuario
                             </a>
                             <hr>
+
+                            @include('shared.table-filter', [
+                                'action' => route('usuarios.index'),
+                                'placeholder' => 'Buscar por nombre, email, rol...'
+                            ])
+
                             <!-- Table with stripped rows -->
-                            <table class="table datatable">
-                                <thead>
-                                    <tr class="text-center justify-content-center">
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Estado</th>
-                                        <th>Rol</th>
-                                        <th>Acciones </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @include("modules.usuarios.tbody")
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr class="text-center justify-content-center">
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Estado</th>
+                                            <th>Rol</th>
+                                            <th>Acciones </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @include("modules.usuarios.tbody")
+                                    </tbody>
+                                </table>
+                            </div>
                             <!-- End Table with stripped rows -->
+
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+                                <small class="text-muted">
+                                    Mostrando {{ $items->firstItem() ?? 0 }} a {{ $items->lastItem() ?? 0 }} de {{ $items->total() }} registros
+                                </small>
+                                <div>
+                                    {{ $items->links() }}
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -71,9 +88,12 @@
         @endif
 
         function recargar_tbody() {
+            let urlParams = new URLSearchParams(window.location.search);
+            let queryString = urlParams.toString();
+            let url = "{{ route('usuarios.tbody') }}" + (queryString ? '?' + queryString : '');
             $.ajax({
                 type: "GET",
-                url: "{{ route('usuarios.tbody') }}",
+                url: url,
                 success: function (response) {
                     $('table tbody').html(response);
                 }

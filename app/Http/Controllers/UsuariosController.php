@@ -12,10 +12,23 @@ class UsuariosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $titulo = "Administrador de Usuarios";
-        $items = User::all();
+        $buscar = $request->get('buscar');
+        $cantidad = (int) $request->get('cantidad', 10);
+        $cantidad = max(1, min(20, $cantidad ?: 10));
+
+        $items = User::when($buscar, function ($query, $buscar) {
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('name', 'like', "%{$buscar}%")
+                        ->orWhere('email', 'like', "%{$buscar}%")
+                        ->orWhere('roles', 'like', "%{$buscar}%");
+                });
+            })
+            ->paginate($cantidad)
+            ->withQueryString();
+
         return view("modules.usuarios.index", compact("titulo", "items"));
     }
 
@@ -93,7 +106,20 @@ class UsuariosController extends Controller
 
     public function tbody(Request $request)
     {
-        $items = User::all();
+        $buscar = $request->get('buscar');
+        $cantidad = (int) $request->get('cantidad', 10);
+        $cantidad = max(1, min(20, $cantidad ?: 10));
+
+        $items = User::when($buscar, function ($query, $buscar) {
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('name', 'like', "%{$buscar}%")
+                        ->orWhere('email', 'like', "%{$buscar}%")
+                        ->orWhere('roles', 'like', "%{$buscar}%");
+                });
+            })
+            ->paginate($cantidad)
+            ->withQueryString();
+
         return view('modules.usuarios.tbody', compact('items'));
     }
 

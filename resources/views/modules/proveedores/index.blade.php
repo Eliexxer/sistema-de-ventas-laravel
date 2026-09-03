@@ -21,41 +21,68 @@
                                 <i class="fa-solid fa-circle-plus"></i> Nuevo Proveedor
                             </a>
                             <hr>
+
+                            @include('shared.table-filter', [
+                                'action' => route('proveedores.index'),
+                                'placeholder' => 'Buscar por nombre, email, teléfono, ciudad...'
+                            ])
+
                             <!-- Table with stripped rows -->
-                            <table class="table datatable">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Teléfono</th>
-                                        <th>Email</th>
-                                        <th>CP</th>
-                                        <th>Sitio Web</th>
-                                        <th>Notas</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($items as $item)
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $item->nombre }}</td>
-                                            <td>{{ $item->telefono }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->cp }}</td>
-                                            <td>{{ $item->sitio_web }}</td>
-                                            <td>{{ $item->notas }}</td>
-                                            <td>
-                                                <a class="btn btn-warning" href="{{ route('proveedores.edit', $item->id) }}">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </a>
-                                                <a class="btn btn-danger" href="{{ route('proveedores.show', $item->id) }}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </a>
-                                            </td>
+                                            <th>Nombre</th>
+                                            <th>Teléfono</th>
+                                            <th>Email</th>
+                                            <th>CP</th>
+                                            <th>Sitio Web</th>
+                                            <th>Notas</th>
+                                            <th class="text-center">Acciones</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($items as $item)
+                                            <tr>
+                                                <td>{{ $item->nombre }}</td>
+                                                <td>{{ $item->telefono }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->cp }}</td>
+                                                <td>{{ $item->sitio_web }}</td>
+                                                <td>{{ $item->notas }}</td>
+                                                <td class="text-center">
+                                                    <a class="btn btn-warning btn-sm" href="{{ route('proveedores.edit', $item->id) }}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    <a class="btn btn-danger btn-sm" href="{{ route('proveedores.show', $item->id) }}">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" class="text-center py-4 text-muted">
+                                                    <i class="fa-solid fa-folder-open fs-3 d-block mb-2"></i>
+                                                    No se encontraron proveedores
+                                                    @if(request('buscar'))
+                                                        para "<strong>{{ request('buscar') }}</strong>"
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                             <!-- End Table with stripped rows -->
+
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+                                <small class="text-muted">
+                                    Mostrando {{ $items->firstItem() ?? 0 }} a {{ $items->lastItem() ?? 0 }} de {{ $items->total() }} registros
+                                </small>
+                                <div>
+                                    {{ $items->links() }}
+                                </div>
+                            </div>
 
                         </div>
                     </div>
